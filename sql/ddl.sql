@@ -1,9 +1,10 @@
 -- 创建库
-create database if not exists dy_api;
+create database if not exists my_db;
 
 -- 切换库
-use dy_api;
+use my_db;
 
+use dy_api;
 -- 用户表
 create table if not exists user
 (
