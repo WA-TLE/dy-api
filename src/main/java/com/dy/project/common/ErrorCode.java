@@ -7,6 +7,9 @@ package com.dy.project.common;
  */
 public enum ErrorCode {
 
+    /**
+     * ok
+     */
     SUCCESS(0, "ok"),
     /**
      * 请求参数错误

@@ -34,4 +34,4 @@ build/
 /src/main/resources/application-secrets.yml
 /src/test/
 /sql/temp.sql
-/src/main/java/com/dy/project/Main.java
+

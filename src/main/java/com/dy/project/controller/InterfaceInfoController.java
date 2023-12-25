@@ -1,12 +1,11 @@
 package com.dy.project.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.dy.client.DyApiClient;
 import com.dy.project.annotation.AuthCheck;
-import com.dy.project.common.BaseResponse;
-import com.dy.project.common.DeleteRequest;
-import com.dy.project.common.ErrorCode;
-import com.dy.project.common.ResultUtils;
+import com.dy.project.common.*;
 import com.dy.project.constant.CommonConstant;
 import com.dy.project.exception.BusinessException;
 import com.dy.project.model.dto.interfaceinfo.InterfaceInfoAddRequest;
@@ -14,6 +13,7 @@ import com.dy.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.dy.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.dy.project.model.entity.InterfaceInfo;
 import com.dy.project.model.entity.User;
+import com.dy.project.model.enums.InterfaceInfoStatusEnum;
 import com.dy.project.service.InterfaceInfoService;
 import com.dy.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +41,10 @@ public class InterfaceInfoController {
     @Resource
     private UserService userService;
 
+   @Resource
+   private DyApiClient dyApiClient;
+
+
     // region 增删改查
 
     /**
@@ -51,6 +55,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/add")
+
     public BaseResponse<Long> addInterfaceInfo(@RequestBody InterfaceInfoAddRequest interfaceInfoAddRequest, HttpServletRequest request) {
         if (interfaceInfoAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -199,6 +204,112 @@ public class InterfaceInfoController {
         Page<InterfaceInfo> interfaceInfoPage = interfaceInfoService.page(new Page<>(current, size), queryWrapper);
         return ResultUtils.success(interfaceInfoPage);
     }
+
+
+    /**
+     * 发布接口
+     *
+     * @param idRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/online")
+    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest,
+                                                     HttpServletRequest request) {
+
+        //  如果 idRequest 为 null 或者 id < 0, 抛出异常
+        if (idRequest == null || idRequest.getId() < 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        long id = idRequest.getId();
+
+        // 判断接口是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        //  判断接口是否可以调用
+        com.dy.model.User user = new com.dy.model.User();
+        String flag = dyApiClient.postJsonName(user);
+
+        if (StrUtil.hasBlank(flag)) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
+        }
+
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.FEMALE.getValue());
+
+        //  这里忘记给接口 set id 了...
+        interfaceInfo.setId(id);
+
+
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+
+
+
+      /*  if (interfaceInfoUpdateRequest == null || interfaceInfoUpdateRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        BeanUtils.copyProperties(interfaceInfoUpdateRequest, interfaceInfo);
+        // 参数校验
+        interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
+        User user = userService.getLoginUser(request);
+        long id = interfaceInfoUpdateRequest.getId();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 仅本人或管理员可修改
+        if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);*/
+
+    }
+
+
+    /**
+     * 下线接口
+     *
+     * @param idRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/offline")
+    public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest,
+                                                      HttpServletRequest request) {
+
+        //  如果 idRequest 为 null 或者 id < 0, 抛出异常
+        if (idRequest == null || idRequest.getId() < 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        long id = idRequest.getId();
+
+        // 判断接口是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+
+
+
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.MALE.getValue());
+        //  这里忘记给接口 set id 了...
+        interfaceInfo.setId(id);
+
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
+
 
     // endregion
 
