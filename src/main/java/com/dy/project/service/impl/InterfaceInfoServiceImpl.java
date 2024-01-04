@@ -19,6 +19,12 @@ import org.springframework.stereotype.Service;
 public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, InterfaceInfo>
         implements InterfaceInfoService {
 
+    /**
+     * 判断接口信息是否有效
+     *
+     * @param interfaceInfo
+     * @param add
+     */
     @Override
     public void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add) {
 
@@ -36,9 +42,11 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         Long userId = interfaceInfo.getUserId();
 
 
-        // 创建时，所有参数必须非空
+        //  创建时，所有参数必须非空
+        //  这里我最初写的是 &&, 但是我的本意是如果任何一个参数为 null 或者 " ", 我就抛出异常
+        //  也就是说, 我在创建接口的时候, 这些参数都不准为 null 所以这里应该用 "||"
         if (add) {
-            if (StringUtils.isAnyBlank(name, description, url, requestHeader, responseHeader, method) &&
+            if (StringUtils.isAnyBlank(name, description, url, requestHeader, responseHeader, method) ||
             ObjectUtils.anyNull(userId)) {
 
                 throw new BusinessException(ErrorCode.PARAMS_ERROR);

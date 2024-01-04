@@ -43,6 +43,16 @@ public class UserUpdateRequest implements Serializable {
     private String userRole;
 
     /**
+     * accessKey
+     */
+    private String accessKey;
+
+    /**
+     * secretKey
+     */
+    private String secretKey;
+
+    /**
      * 密码
      */
     private String userPassword;

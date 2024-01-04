@@ -41,8 +41,8 @@ public class InterfaceInfoController {
     @Resource
     private UserService userService;
 
-   @Resource
-   private DyApiClient dyApiClient;
+    @Resource
+    private DyApiClient dyApiClient;
 
 
     // region 增删改查
@@ -55,7 +55,6 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/add")
-
     public BaseResponse<Long> addInterfaceInfo(@RequestBody InterfaceInfoAddRequest interfaceInfoAddRequest, HttpServletRequest request) {
         if (interfaceInfoAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -95,7 +94,7 @@ public class InterfaceInfoController {
         if (oldInterfaceInfo == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        // 这里改为仅管理员可以删除帖子
+        // 仅管理员和接口创建者才可以删除接口
         if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
@@ -297,8 +296,6 @@ public class InterfaceInfoController {
         if (oldInterfaceInfo == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-
-
 
 
         InterfaceInfo interfaceInfo = new InterfaceInfo();
