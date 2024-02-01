@@ -63,6 +63,12 @@ public class InterfaceInfo implements Serializable {
     private String method;
 
     /**
+     * 请求参数
+     */
+    @TableField(value = "requestParams")
+    private String requestParams;
+
+    /**
      * 创建人
      */
     @TableField(value = "userId")

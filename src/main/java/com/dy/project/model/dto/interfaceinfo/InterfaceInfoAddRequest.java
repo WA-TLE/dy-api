@@ -1,5 +1,6 @@
 package com.dy.project.model.dto.interfaceinfo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -45,6 +46,12 @@ public class InterfaceInfoAddRequest implements Serializable {
      * 请求类型
      */
     private String method;
+
+    /**
+     * 请求参数
+     */
+    @TableField(value = "requestParams")
+    private String requestParams;
 
 
 

@@ -69,6 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             String accessKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(5));
             String secretKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(8));;
 
+            // TODO: 2024/1/4 如果用户想要更换签名呢???
 
 
             // 3. 插入数据

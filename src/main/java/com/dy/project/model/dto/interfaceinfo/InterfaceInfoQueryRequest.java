@@ -1,5 +1,6 @@
 package com.dy.project.model.dto.interfaceinfo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.dy.project.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,6 +55,12 @@ public class InterfaceInfoQueryRequest extends PageRequest implements Serializab
      * 请求类型
      */
     private String method;
+
+    /**
+     * 请求参数
+     */
+    @TableField(value = "requestParams")
+    private String requestParams;
 
     /**
      * 创建人
