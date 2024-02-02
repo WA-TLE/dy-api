@@ -1,6 +1,7 @@
 package com.dy.project.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dy.client.DyApiClient;
@@ -9,6 +10,7 @@ import com.dy.project.common.*;
 import com.dy.project.constant.CommonConstant;
 import com.dy.project.exception.BusinessException;
 import com.dy.project.model.dto.interfaceinfo.InterfaceInfoAddRequest;
+import com.dy.project.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import com.dy.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.dy.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.dy.project.model.entity.InterfaceInfo;
@@ -63,7 +65,7 @@ public class InterfaceInfoController {
         BeanUtils.copyProperties(interfaceInfoAddRequest, interfaceInfo);
 
         // 校验
-        interfaceInfoService.validInterfaceInfo(interfaceInfo, true);
+        interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
 
         User loginUser = userService.getLoginUser(request);
         interfaceInfo.setUserId(loginUser.getId());
@@ -214,6 +216,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/online")
+    @AuthCheck(mustRole = "admin")
     public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest,
                                                      HttpServletRequest request) {
 
@@ -248,29 +251,6 @@ public class InterfaceInfoController {
         boolean result = interfaceInfoService.updateById(interfaceInfo);
         return ResultUtils.success(result);
 
-
-
-      /*  if (interfaceInfoUpdateRequest == null || interfaceInfoUpdateRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        InterfaceInfo interfaceInfo = new InterfaceInfo();
-        BeanUtils.copyProperties(interfaceInfoUpdateRequest, interfaceInfo);
-        // 参数校验
-        interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
-        User user = userService.getLoginUser(request);
-        long id = interfaceInfoUpdateRequest.getId();
-        // 判断是否存在
-        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
-        if (oldInterfaceInfo == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-        }
-        // 仅本人或管理员可修改
-        if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-        }
-        boolean result = interfaceInfoService.updateById(interfaceInfo);
-        return ResultUtils.success(result);*/
-
     }
 
 
@@ -282,6 +262,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/offline")
+    @AuthCheck(mustRole = "admin")
     public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest,
                                                       HttpServletRequest request) {
 
@@ -306,6 +287,55 @@ public class InterfaceInfoController {
 
         boolean result = interfaceInfoService.updateById(interfaceInfo);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 测试用户调用接口
+     *
+     * @param interfaceInfoInvokeRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> testInvokeInterface(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
+                                                      HttpServletRequest request) {
+
+        //  1. 校验请求参数
+        if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() < 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        //  获取接口 id
+        long id = interfaceInfoInvokeRequest.getId();
+
+        // 判断接口是否存在
+        InterfaceInfo InterfaceInfo = interfaceInfoService.getById(id);
+        if (InterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        //  判断接口是否可用
+        if (InterfaceInfo.getStatus() != InterfaceInfoStatusEnum.FEMALE.getValue()) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR);
+        }
+
+        //  用户是否有权限
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+
+        DyApiClient dyApiClient = new DyApiClient(accessKey, secretKey);
+
+        //  获取用户请求参数
+        String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
+
+
+        com.dy.model.User user = JSONObject.parseObject(userRequestParams, com.dy.model.User.class);
+
+        String name = dyApiClient.postJsonName(user);
+
+
+        return ResultUtils.success(name);
     }
 
 
