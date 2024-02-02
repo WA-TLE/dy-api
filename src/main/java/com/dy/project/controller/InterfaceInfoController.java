@@ -65,7 +65,8 @@ public class InterfaceInfoController {
         BeanUtils.copyProperties(interfaceInfoAddRequest, interfaceInfo);
 
         // 校验
-        interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
+        // TODO: 2024/2/2 这里先改为 false, 等后期再优化用户 id
+        interfaceInfoService.validInterfaceInfo(interfaceInfo, true);
 
         User loginUser = userService.getLoginUser(request);
         interfaceInfo.setUserId(loginUser.getId());
