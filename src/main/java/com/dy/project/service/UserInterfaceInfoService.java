@@ -1,7 +1,6 @@
 package com.dy.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dy.project.model.entity.InterfaceInfo;
 import com.dy.project.model.entity.UserInterfaceInfo;
 
 
@@ -12,4 +11,6 @@ import com.dy.project.model.entity.UserInterfaceInfo;
 */
 public interface UserInterfaceInfoService extends IService<UserInterfaceInfo> {
     void validInterfaceInfo(UserInterfaceInfo InterfaceInfo, boolean add);
+
+    boolean invokeCount(Long interfaceInfoId, Long userId);
 }

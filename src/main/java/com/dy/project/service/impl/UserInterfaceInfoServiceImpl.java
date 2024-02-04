@@ -1,13 +1,10 @@
 package com.dy.project.service.impl;
 
-import java.util.Date;
-
-
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dy.project.common.ErrorCode;
 import com.dy.project.exception.BusinessException;
 import com.dy.project.mapper.UserInterfaceInfoMapper;
-import com.dy.project.model.entity.InterfaceInfo;
 import com.dy.project.model.entity.UserInterfaceInfo;
 import com.dy.project.service.UserInterfaceInfoService;
 import org.apache.commons.lang3.ObjectUtils;
@@ -42,18 +39,48 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         Integer status = userInterfaceInfo.getStatus();
 
 
-
         if (add) {
             if (ObjectUtils.anyNull(userId, interfaceInfoId, totalNum, leftNum)) {
 
                 throw new BusinessException(ErrorCode.PARAMS_ERROR);
             }
         }
-        if (totalNum < 0 || leftNum < 0 ) {
+        if (totalNum < 0 || leftNum < 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户调用次数有误");
         }
 
 
+    }
+
+    /**
+     * 实现用户调用接口次数加一
+     *
+     * @param interfaceInfoId
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean invokeCount(Long interfaceInfoId, Long userId) {
+
+        //  校验参数是否存在
+        if (ObjectUtils.anyNull(interfaceInfoId, userId)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        //  校验参数是否合法
+        if (interfaceInfoId <= 0 || userId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        //  更新数据
+        LambdaUpdateWrapper<UserInterfaceInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+
+        lambdaUpdateWrapper.eq(UserInterfaceInfo::getInterfaceInfoId, interfaceInfoId)
+                .eq(UserInterfaceInfo::getUserId, userId)
+                .gt(UserInterfaceInfo::getLeftNum, 0)
+                .setSql("leftNum = leftNum - 1, totalNum = totalNum + 1");
+
+        return this.update(lambdaUpdateWrapper);
     }
 }
 

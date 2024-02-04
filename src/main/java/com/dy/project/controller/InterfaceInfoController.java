@@ -209,6 +209,7 @@ public class InterfaceInfoController {
 
     // endregion
 
+    // TODO: 2024/2/4 关于代码重复使用问题的解决
     /**
      * 发布接口
      *
@@ -234,7 +235,8 @@ public class InterfaceInfoController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
 
-        //  判断接口是否可以调用
+        //   判断接口是否可以调用
+        //   在接口上线前做一下测试是没有什么毛病的
         com.dy.model.User user = new com.dy.model.User();
         String flag = dyApiClient.postJsonName(user);
 

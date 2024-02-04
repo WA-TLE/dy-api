@@ -66,13 +66,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             // 2. 加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
 
+            // 3. 给用户分配 ak, sk
             String accessKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(5));
             String secretKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(8));;
 
             // TODO: 2024/1/4 如果用户想要更换签名呢???
 
 
-            // 3. 插入数据
+            // 4. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
