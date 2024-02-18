@@ -8,7 +8,6 @@ import com.dy.project.mapper.UserInterfaceInfoMapper;
 import com.dy.project.model.entity.UserInterfaceInfo;
 import com.dy.project.service.UserInterfaceInfoService;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -71,6 +70,8 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         if (interfaceInfoId <= 0 || userId <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+
+        // TODO: 2024/2/4 这里应该添加事务和锁
 
         //  更新数据
         LambdaUpdateWrapper<UserInterfaceInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();

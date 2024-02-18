@@ -333,6 +333,8 @@ public class InterfaceInfoController {
         String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
 
 
+        //  调用这个接口, 用户传递的 json 数据为 {"name":"dy"}
+        //  原因在于我们在客户端里面 user 的属性就是 name, 如果不用 name 的话, json 解析就不能赋值
         com.dy.model.User user = JSONObject.parseObject(userRequestParams, com.dy.model.User.class);
 
         String name = dyApiClient.postJsonName(user);
