@@ -2,6 +2,9 @@ package com.dy.project.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.dy.common.model.entity.InterfaceInfo;
+import com.dy.project.model.vo.InterfaceInfoVO;
+
+import java.util.List;
 //com.dy.common.model.entity.InterfaceInfo;
 
 /**

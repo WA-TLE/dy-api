@@ -2,7 +2,11 @@ package com.dy.project.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.dy.common.model.entity.InterfaceInfo;
 import com.dy.common.model.entity.UserInterfaceInfo;
+import com.dy.project.model.vo.InterfaceInfoVO;
+
+import java.util.List;
 
 /**
 * @author 微光
@@ -11,7 +15,7 @@ import com.dy.common.model.entity.UserInterfaceInfo;
 * @Entity generator.domain.UserInterfaceInfo
 */
 public interface UserInterfaceInfoMapper extends BaseMapper<UserInterfaceInfo> {
-
+    List<UserInterfaceInfo> listTopInvokeInterfaceInfo(Integer limit);
 }
 
 
