@@ -2,7 +2,7 @@ package com.dy.project.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dy.project.model.entity.UserInterfaceInfo;
+import com.dy.common.model.entity.UserInterfaceInfo;
 
 /**
 * @author 微光

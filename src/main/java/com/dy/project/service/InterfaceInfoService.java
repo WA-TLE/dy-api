@@ -1,8 +1,8 @@
 package com.dy.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.dy.project.model.entity.InterfaceInfo;
-import com.dy.project.model.entity.InterfaceInfo;
+import com.dy.common.model.entity.InterfaceInfo;
+
 
 /**
 * @author dy

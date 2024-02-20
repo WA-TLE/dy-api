@@ -1,7 +1,8 @@
 package com.dy.project.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.dy.project.model.entity.InterfaceInfo;
+import com.dy.common.model.entity.InterfaceInfo;
+//com.dy.common.model.entity.InterfaceInfo;
 
 /**
 * @author dy
