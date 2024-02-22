@@ -10,9 +10,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.dy</groupId>
-    <artifactId>dy-api</artifactId>
+    <artifactId>dy-api-admin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>dy-api</name>
+    <name>dy-api-admin</name>
     <description>springboot 初始项目</description>
     <properties>
         <java.version>1.8</java.version>
@@ -98,7 +98,7 @@
 
         <dependency>
             <groupId>com.dy</groupId>
-            <artifactId>dyapi-client-sdk</artifactId>
+            <artifactId>dy-client-sdk</artifactId>
             <version>0.0.1</version>
         </dependency>
 
@@ -123,7 +123,7 @@
 
         <dependency>
             <groupId>com.dy</groupId>
-            <artifactId>dyapi-common</artifactId>
+            <artifactId>dy-api-common</artifactId>
             <version>0.0.1</version>
         </dependency>
 

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: dy-api
+    name: dy-api-admin
   # DataSource Config
 
   devtools:
@@ -53,7 +53,7 @@ dyapi:
 dubbo:
   application:
     # 设置应用的名称
-    name: dy-api
+    name: dy-api-admin
   # 指定使用 Dubbo 协议，且端口设置为 -1，表示随机分配可用端口
   protocol:
     name: dubbo
